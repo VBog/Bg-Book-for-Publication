@@ -1,0 +1,64 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Bg Book Publisher\n"
+"POT-Creation-Date: 2017-10-31 00:40+0300\n"
+"PO-Revision-Date: 2016-04-25 09:48+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: bg_bpub.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: bg_bpub.php:214
+msgid "Table of contents"
+msgstr ""
+
+#: bg_bpub.php:251
+msgid "Book for publication"
+msgstr ""
+
+#: bg_bpub.php:264
+msgid "this post is book"
+msgstr ""
+
+#: bg_bpub.php:266
+msgid "Header level for page break tags"
+msgstr ""
+
+#: bg_bpub.php:270
+msgid "Header level for table of contents"
+msgstr ""
+
+#: bg_bpub.php:274
+msgid "Book author"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Bg Book Publisher"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://bogaiskov.ru"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"The plugin helps you to publish big book with a detailed structure of "
+"chapters and sections and forms table of contents of the book."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "VBog"
+msgstr ""
