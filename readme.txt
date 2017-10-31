@@ -1,9 +1,9 @@
-﻿=== Bg Bible References ===
+﻿=== Bg Book Publisher ===
 Contributors: VBog
 Donate link: http://bogaiskov.ru/about-me/donate/
-Tags: book, publisher,
+Tags: book, publisher, table of contents, nextpage, page, header, level
 Requires at least: 3.0.1
-Tested up to: 4.8.2
+Tested up to: 4.8.3
 Stable tag: trunk
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -19,7 +19,8 @@ On the post editing page you can set the maximum level of headers included in th
 
 You can set the header levels from 1 to 6, and also disable the action of the plug-in for this post by unchecking the item 'this post is book'.
 
-You can also set the author of the published book, which will be listed directly in the post title.
+You can also set the author of the published book, which will be showed directly in the post title.
+To insert name of book author into the text you can also use shortcode [book_author]  or PHP-function bg_bpub_book_author($post_id) in page template.
 
 To customize the post appearance, you can use the following classes:
 1. bg_bpub_toc - class of contaner (div) with table of contents.
@@ -31,22 +32,16 @@ To customize the post appearance, you can use the following classes:
 1. Upload 'bg-biblie-references' directory to the '/wp-content/plugins/' directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 
-== Frequently Asked Questions ==
-
-= How do I know that the script works? =
-
-Any references to Bible verses on your page will be replaced by hyperlink.
-
-= Why can't I use a script? =
-
-* Make sure that your browser supports JavaScript, and JavaScript enabled in your browser.
-* Verify that the reference to the Bible is framed in accordance with the generally accepted rules.
-
 == Screenshots ==
 
-1. Plugin's post setting.
+1. Plugin's post settings.
+2. Plugin options.
 
 == Changelog ==
+
+= 0.2 =
+
+* Added options page
 
 = 0.1 =
 
@@ -54,6 +49,7 @@ Any references to Bible verses on your page will be replaced by hyperlink.
 
 == Upgrade Notice ==
 
+* Added options page
 
 == Notes for Translators ==
 

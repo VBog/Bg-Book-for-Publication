@@ -1,9 +1,8 @@
 <?php
 /* 
     Plugin Name: Bg Book Publisher 
-    Plugin URI: https://bogaiskov.ru
     Description: The plugin helps you to publish big book with a detailed structure of chapters and sections and forms table of contents of the book.
-    Version: 0.1.0
+    Version: 0.2.0
     Author: VBog
     Author URI: https://bogaiskov.ru 
 	License:     GPL2
@@ -38,7 +37,7 @@ if ( !defined('ABSPATH') ) {
 	die( 'Sorry, you are not allowed to access this page directly.' ); 
 }
 
-define('BG_BPUB_VERSION', '0.1.0');
+define('BG_BPUB_VERSION', '0.2.0');
 
 // Устанавливаем крючки
 if ( defined('ABSPATH') && defined('WPINC') ) {
@@ -49,9 +48,9 @@ if ( defined('ABSPATH') && defined('WPINC') ) {
 //	add_action('admin_menu', 'bg_bpub_add_pages');
 
 	// Регистрируем крючок на удаление плагина
-//	if (function_exists('register_uninstall_hook')) {
-//		register_uninstall_hook(__FILE__, 'bg_bpub_deinstall');
-//	}
+	if (function_exists('register_uninstall_hook')) {
+		register_uninstall_hook(__FILE__, 'bg_bpub_deinstall');
+	}
 
 // Регистрируем крючок для загрузки интернационализации 
 	add_action( 'plugins_loaded', 'bg_bpub_load_textdomain' );
@@ -92,9 +91,12 @@ function bg_bpub_frontend_styles () {
 
 // Добавляем имя автора книги в заголовок записи
 function add_author_to_page_title( $title ) {
+	global $options;
+	if ($options['author_place'] == 'none') return $title;
 	$post = get_post();
 	if( isset($post) && ($post->post_type == 'post' || $post->post_type == 'page') ) { 	// убедимся что мы редактируем заголовок нужного типа поста
-		$title = $title.'<br>'.bg_bpub_book_author($post->ID);
+		if ($options['author_place'] == 'after') $title = $title.'<br>'.bg_bpub_book_author($post->ID);
+		else if ($options['author_place'] == 'before') $title = bg_bpub_book_author($post->ID).'<br>'.$title;
 	}
 	return $title;
 }
@@ -108,22 +110,45 @@ function bg_bpub_book_author_shortcode ( $atts, $content = null ) {
 	$post = get_post();
 	 return bg_bpub_book_author($post->ID);
 }
+// Выполняется при удалении плагина
+function bg_bpub_deinstall() {
+	// Удаляем опции
+	delete_option('bg_bpub_options');
+	
+	// Удаляем мета-поля в постах
+	$args = array(
+		'numberposts' => -1,
+		'post_type' => array('post','page'),
+		'post_status' => 'any'
+	);
+	$allposts = get_posts($args);
+	foreach( $allposts as $postinfo) {
+		delete_post_meta( $postinfo->ID, 'the_book');
+		delete_post_meta( $postinfo->ID, 'nextpage_level');
+		delete_post_meta( $postinfo->ID, 'toc_level');
+		delete_post_meta( $postinfo->ID, 'book_author');
+	}
+}
 
 
+include_once ("inc/options.php");
+$options = get_option('bg_bpub_options');
 /**************************************************************************
   Настраиваемые параметры плагина
 ***************************************************************************/
+// Пост является книгой по умолчанию
+$is_book = $options['default'];
 // Уровень заголовков, по которым производить разбиение по страницам
-$nextpage_level = 2;
+$nextpage_level = $options['nextpage_level'];
 // Максимальный уровень, до которого включать заголовки в оглавление
-$max_level = 3;
+$toc_level = $options['toc_level'];
 
 
 /**************************************************************************
   Функция обработки текста при сохранении поста
 ***************************************************************************/
 function bg_bpub_save( $id ) {
-	global $nextpage_level, $max_level;
+	global $is_book, $nextpage_level, $toc_level;
 
 	$post = get_post($id);
 	if( isset($post) && ($post->post_type == 'post' || $post->post_type == 'page') ) { 	// убедимся что мы редактируем нужный тип поста
@@ -134,13 +159,13 @@ function bg_bpub_save( $id ) {
 			// Уровень заголовков, по которым производить разбиение по страницам
 			$nextpage_level = get_post_meta($post->ID, 'nextpage_level',true);
 			// Максимальный уровень, до которого включать заголовки в оглавление
-			$max_level = get_post_meta($post->ID, 'max_level',true);
+			$toc_level = get_post_meta($post->ID, 'toc_level',true);
 
 			$content = $post->post_content;
 			// Удаляем ранее внесенные изменения
 			$content = bg_bpub_clear ($content);
 			// Добавляем разрывы страниц и оглавление
-			if (get_post_meta($id, 'book_for_publication',true)) $content = bg_bpub_proc ($content);
+			if (get_post_meta($id, 'the_book',true)) $content = bg_bpub_proc ($content);
 
 			// Удаляем хук, чтобы не было зацикливания
 			remove_action( 'save_post', 'bg_bpub_save' );
@@ -179,7 +204,7 @@ function bg_bpub_proc ($content) {
 	// Ищем все заголовки
 	$content = preg_replace_callback ('/<(h[1-6])(.*?)>(.*?)<\/\1>/is',
 		function ($match) {
-			global $headers, $pagenum, $table_of_contents, $nextpage_level, $max_level;
+			global $headers, $pagenum, $table_of_contents, $nextpage_level, $toc_level;
 			
 			$level = (int) $match[1][1];			// Уровень заголовка от 1 до 6
 			
@@ -200,7 +225,7 @@ function bg_bpub_proc ($content) {
 			for ($l=0; $l<$level; $l++) $name.='_'.$headers['h'.($l+1)];
 			
 			$anchor = "";
-			if ($level <= $max_level) {
+			if ($level <= $toc_level) {
 				// Создаем оглавление
 				$table_of_contents .= '<a class="bg_bpub_toc_'.$match[1].'" href="../'.$pagenum.'/#'.$name.'">'.strip_tags($match[3]).'</a><br>';
 				// Создаем якорь
@@ -248,19 +273,21 @@ function bg_bpub_clear ($content) {
 add_action('admin_init', 'bg_bpub_extra_fields', 1);
 // Создание блока
 function bg_bpub_extra_fields() {
-    add_meta_box( 'bg_bpub_extra_fields', __('Book for publication', 'bg_bpub'), 'bg_bpub_extra_fields_box_func', array('post', 'page'), 'side', 'low'  );
+    add_meta_box( 'bg_bpub_extra_fields', __('Book Publisher', 'bg_bpub'), 'bg_bpub_extra_fields_box_func', array('post', 'page'), 'side', 'low'  );
 }
 // Добавление полей
 function bg_bpub_extra_fields_box_func( $post ){
+	global $options;
+	
 	wp_nonce_field( basename( __FILE__ ), 'bg_bpub_extra_fields_nonce' );
 	// Дополнительное поле поста
-	add_post_meta($post->ID, 'book_for_publication', true, true );
-	add_post_meta($post->ID, 'nextpage_level', 2, true );
-	add_post_meta($post->ID, 'max_level', 3, true );
+	add_post_meta($post->ID, 'the_book', $options['default'], true );
+	add_post_meta($post->ID, 'nextpage_level', $options['nextpage_level'], true );
+	add_post_meta($post->ID, 'toc_level', $options['toc_level'], true );
 	add_post_meta($post->ID, 'book_author', "", true );
 	
-	$html = '<label><input type="checkbox" name="bg_bpub_book_for_publication" id="bg_bpub_book_for_publication"';
-	$html .= (get_post_meta($post->ID, 'book_for_publication',true)) ? ' checked="checked"' : '';
+	$html = '<label><input type="checkbox" name="bg_bpub_the_book" id="bg_bpub_the_book"';
+	$html .= (get_post_meta($post->ID, 'the_book',true)) ? ' checked="checked"' : '';
 	$html .= ' /> '.__('this post is book', 'bg_bpub').'</label><br>';
 
 	$html .= '<label>'.__('Header level for page break tags', 'bg_bpub').'<br>';
@@ -268,8 +295,8 @@ function bg_bpub_extra_fields_box_func( $post ){
 	$html .= ' value="'.get_post_meta($post->ID, 'nextpage_level',true).'" /></label><br>';
 
 	$html .= '<label>'.__('Header level for table of contents', 'bg_bpub').'<br>';
-	$html .= '<input type="number" name="bg_bpub_max_level" id="bg_bpub_max_level" min="1" max="6"';
-	$html .= ' value="'.get_post_meta($post->ID, 'max_level',true).'" /></label><br>';
+	$html .= '<input type="number" name="bg_bpub_toc_level" id="bg_bpub_toc_level" min="1" max="6"';
+	$html .= ' value="'.get_post_meta($post->ID, 'toc_level',true).'" /></label><br>';
 
 	$html .= '<label>'.__('Book author', 'bg_bpub').'<br>';
 	$html .= '<input type="text" name="bg_bpub_book_author" id="bg_bpub_book_author" size="35"';
@@ -288,13 +315,13 @@ function bg_bpub_extra_fields_update( $post_id ){
 	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) return $post_id;
 	// проверяем, права пользователя, может ли он редактировать записи
 	if ( !current_user_can( 'edit_post', $post_id ) ) return $post_id;
-	if (isset( $_POST['bg_bpub_book_for_publication'])) {
-		update_post_meta($post_id, 'book_for_publication', $_POST['bg_bpub_book_for_publication']);
+	if (isset( $_POST['bg_bpub_the_book'])) {
+		update_post_meta($post_id, 'the_book', $_POST['bg_bpub_the_book']);
 		update_post_meta($post_id, 'nextpage_level', $_POST['bg_bpub_nextpage_level']);
-		update_post_meta($post_id, 'max_level', $_POST['bg_bpub_max_level']);
+		update_post_meta($post_id, 'toc_level', $_POST['bg_bpub_toc_level']);
 		update_post_meta($post_id, 'book_author', $_POST['bg_bpub_book_author'] );
 	} else {
-		update_post_meta($post_id, 'book_for_publication', '');
+		update_post_meta($post_id, 'the_book', '');
 	}
 	return $post_id;		
 }

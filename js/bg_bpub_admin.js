@@ -1,18 +1,18 @@
 jQuery(document).ready( function() {
-	if(jQuery('#bg_bpub_book_for_publication').attr("checked") != 'checked') { 
+	if(jQuery('#bg_bpub_the_book').attr("checked") != 'checked') { 
 		jQuery('#bg_bpub_nextpage_level').prop('disabled',true);
-		jQuery('#bg_bpub_max_level').prop('disabled',true);
+		jQuery('#bg_bpub_toc_level').prop('disabled',true);
 	} else {
 		jQuery('#bg_bpub_nextpage_level').prop('disabled',false);
-		jQuery('#bg_bpub_max_level').prop('disabled',false);
+		jQuery('#bg_bpub_toc_level').prop('disabled',false);
 	}		
-	jQuery('#bg_bpub_book_for_publication').click( function() {
+	jQuery('#bg_bpub_the_book').click( function() {
 		if(jQuery(this).attr("checked") != 'checked') { 
 			jQuery('#bg_bpub_nextpage_level').prop('disabled',true);
-			jQuery('#bg_bpub_max_level').prop('disabled',true);
+			jQuery('#bg_bpub_toc_level').prop('disabled',true);
 		} else {
 			jQuery('#bg_bpub_nextpage_level').prop('disabled',false);
-			jQuery('#bg_bpub_max_level').prop('disabled',false);
+			jQuery('#bg_bpub_toc_level').prop('disabled',false);
 		}		
 	});
 });

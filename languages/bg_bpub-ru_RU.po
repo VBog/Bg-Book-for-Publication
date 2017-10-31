@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Bg Book Publisher\n"
-"POT-Creation-Date: 2017-10-31 00:40+0300\n"
-"PO-Revision-Date: 2017-10-31 00:40+0300\n"
+"POT-Creation-Date: 2017-10-31 20:02+0300\n"
+"PO-Revision-Date: 2017-10-31 20:02+0300\n"
 "Last-Translator: Vadim Bogaiskov <vadim.bogaiskov@gmail.com>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -21,37 +21,64 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: bg_bpub.php:214
+#: bg_bpub.php:224
 msgid "Table of contents"
 msgstr "Оглавление"
 
-#: bg_bpub.php:251
-msgid "Book for publication"
-msgstr "Книга для публикации"
+#: bg_bpub.php:261 inc/options.php:10
+msgid "Book Publisher"
+msgstr "Публикация книг"
 
-#: bg_bpub.php:264
+#: bg_bpub.php:276
 msgid "this post is book"
 msgstr "этот пост - книга"
 
-#: bg_bpub.php:266
+#: bg_bpub.php:278 inc/options.php:45
 msgid "Header level for page break tags"
 msgstr "Уровень заголовков для тегов разрыва страницы"
 
-#: bg_bpub.php:270
+#: bg_bpub.php:282 inc/options.php:46
 msgid "Header level for table of contents"
 msgstr "Уровень заголовков для оглавления"
 
-#: bg_bpub.php:274
+#: bg_bpub.php:286
 msgid "Book author"
 msgstr "Автор книги"
 
+#: inc/options.php:10
+msgid "Book Publisher options"
+msgstr "Настройки плагина \"Публикация книг\""
+
+#: inc/options.php:41
+msgid "Default options"
+msgstr "Параметры по умолчанию"
+
+#: inc/options.php:44
+msgid "A post is book or not by default?"
+msgstr "Пост - книга или нет по умолчанию?"
+
+#: inc/options.php:47
+msgid "Place where show name of book author"
+msgstr "Место где показывать имя автора книги"
+
+#: inc/options.php:55
+msgid "check if a post is book by default"
+msgstr "отметьте, если пост является книгой по умолчанию"
+
+#: inc/options.php:82
+msgid "Before title"
+msgstr "До заголовка"
+
+#: inc/options.php:83
+msgid "After title"
+msgstr "После заголовка"
+
+#: inc/options.php:84
+msgid "Don't show name of book author"
+msgstr "Не показывать имя автора книги"
+
 #. Plugin Name of the plugin/theme
 msgid "Bg Book Publisher"
-msgstr ""
-
-#. Plugin URI of the plugin/theme
-#. Author URI of the plugin/theme
-msgid "https://bogaiskov.ru"
 msgstr ""
 
 #. Description of the plugin/theme
@@ -65,3 +92,16 @@ msgstr ""
 #. Author of the plugin/theme
 msgid "VBog"
 msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://bogaiskov.ru"
+msgstr ""
+
+#~ msgid "Level of headings where you break the pages"
+#~ msgstr "Уровень заголовков, где вы разрываете страницы"
+
+#~ msgid "Maximum level of headers included in the table of contents"
+#~ msgstr "Максимальный уровень заголовков, включаемых в оглавление"
+
+#~ msgid "Book for publication"
+#~ msgstr "Книга для публикации"
