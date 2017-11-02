@@ -50,7 +50,7 @@ function bg_bpub_settings(){
 ## Заполняем опцию 1
 function fill_bg_bpub_default(){
 	$val = get_option('bg_bpub_options');
-	$val = $val['default']; 
+	$val = isset ($val['default'])?$val['default']:""; 
 	?>
 	<label><input type="checkbox" name="bg_bpub_options[default]" value="1" <?php checked( 1, $val ); ?> /> <?php _e('check if a post is book by default', 'bg_bpub'); ?></label>
 	<?php
@@ -90,21 +90,27 @@ function fill_bg_bpub_author_place(){
 function bg_bpub_sanitize_callback( $options ){ 
 	// очищаем
 	foreach( $options as $name => &$val ){
-		if( $name == 'default' )
-			$val = (int) strip_tags( $val );
+		if( $name == 'default' ) {
+			$val = (int) sanitize_text_field( $val );
+			if ($val != 1) $val = "";
+		}
 
-		if( $name == 'nextpage_level' )
-			$val = strip_tags( $val );
+		if( $name == 'nextpage_level' ) {
+			$val = (int) sanitize_text_field( $val );
+			if ($val < 1) $val = 1;
+			if ($val > 6) $val = 6;
+		}
 
-		if( $name == 'toc_level' )
-			$val = strip_tags( $val );
+		if( $name == 'toc_level' ) {
+			$val = (int) sanitize_text_field( $val );
+			if ($val < 1) $val = 1;
+			if ($val > 6) $val = 6;
+		}
 
-		if( $name == 'author_place' )
-			$val = strip_tags( $val );
-		
+		if( $name == 'author_place' ) {
+			$val = sanitize_key( $val );
+		}
 	}
-
-	//die(print_r( $options )); // Array ( [input] => aaaa [checkbox] => 1 )
 
 	return $options;
 }
