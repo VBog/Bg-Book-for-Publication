@@ -1,7 +1,7 @@
 ﻿=== Bg Book Publisher ===
 Contributors: VBog
-Donate link: http://bogaiskov.ru/about-me/donate/
 Tags: book, publisher, table of contents, nextpage, page, header, level
+Requires PHP: 5.3
 Requires at least: 3.0.1
 Tested up to: 4.8.3
 Stable tag: trunk
