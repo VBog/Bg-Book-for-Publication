@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Bg Book Publisher\n"
-"POT-Creation-Date: 2017-10-31 20:02+0300\n"
+"POT-Creation-Date: 2017-11-04 05:42+0300\n"
 "PO-Revision-Date: 2016-04-25 09:48+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -20,27 +20,27 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: bg_bpub.php:224
+#: bg_bpub.php:242
 msgid "Table of contents"
 msgstr ""
 
-#: bg_bpub.php:261 inc/options.php:10
+#: bg_bpub.php:283 inc/options.php:10
 msgid "Book Publisher"
 msgstr ""
 
-#: bg_bpub.php:276
+#: bg_bpub.php:298
 msgid "this post is book"
 msgstr ""
 
-#: bg_bpub.php:278 inc/options.php:45
+#: bg_bpub.php:300 inc/options.php:45
 msgid "Header level for page break tags"
 msgstr ""
 
-#: bg_bpub.php:282 inc/options.php:46
+#: bg_bpub.php:304 inc/options.php:46
 msgid "Header level for table of contents"
 msgstr ""
 
-#: bg_bpub.php:286
+#: bg_bpub.php:308
 msgid "Book author"
 msgstr ""
 
@@ -57,22 +57,26 @@ msgid "A post is book or not by default?"
 msgstr ""
 
 #: inc/options.php:47
+msgid "Table of contents on each page"
+msgstr ""
+
+#: inc/options.php:48
 msgid "Place where show name of book author"
 msgstr ""
 
-#: inc/options.php:55
+#: inc/options.php:56
 msgid "check if a post is book by default"
 msgstr ""
 
-#: inc/options.php:82
+#: inc/options.php:92
 msgid "Before title"
 msgstr ""
 
-#: inc/options.php:83
+#: inc/options.php:93
 msgid "After title"
 msgstr ""
 
-#: inc/options.php:84
+#: inc/options.php:94
 msgid "Don't show name of book author"
 msgstr ""
 

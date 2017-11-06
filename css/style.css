@@ -16,3 +16,7 @@ a.bg_bpub_toc_h5 {
 a.bg_bpub_toc_h6 {
 	margin-left: 5em;
 }
+span.bg_bpub_book_author {
+	font-size:80%;
+	font-weight: normal;
+}

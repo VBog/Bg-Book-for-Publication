@@ -2,7 +2,7 @@
 /* 
     Plugin Name: Bg Book Publisher 
     Description: The plugin helps you to publish big book with a detailed structure of chapters and sections and forms table of contents of the book.
-    Version: 0.2.1
+    Version: 1.0
     Author: VBog
     Author URI: https://bogaiskov.ru 
 	License:     GPL2
@@ -37,7 +37,7 @@ if ( !defined('ABSPATH') ) {
 	die( 'Sorry, you are not allowed to access this page directly.' ); 
 }
 
-define('BG_BPUB_VERSION', '0.2.1');
+define('BG_BPUB_VERSION', '1.0');
 
 // Устанавливаем крючки
 if ( defined('ABSPATH') && defined('WPINC') ) {
@@ -139,6 +139,8 @@ $is_book = isset ($options['default'])?$options['default']:"";
 $nextpage_level = $options['nextpage_level'];
 // Максимальный уровень, до которого включать заголовки в оглавление
 $toc_level = $options['toc_level'];
+// Содержание на каждой странице
+$toc_place = isset ($options['toc_place'])?$options['toc_place']:""; 
 // Месторасположение имени автора в заголовке
 $author_place = $options['author_place'];
 
@@ -200,7 +202,7 @@ $table_of_contents = "";
 	Функция разбора текста и формирования ссылок и оглавления
  **************************************************************************/
 function bg_bpub_proc ($content) {
-	global $table_of_contents;
+	global $toc_place, $table_of_contents;
 	
 	// Ищем все заголовки
 	$content = preg_replace_callback ('/<(h[1-6])(.*?)>(.*?)<\/\1>/is',
@@ -239,11 +241,15 @@ function bg_bpub_proc ($content) {
 	
 	$table_of_contents = '<div class="bg_bpub_toc"><details><summary><b>'.__('Table of contents', 'bg_bpub').'</b></summary><br>'.$table_of_contents.'</details></div>';
 	
-	if (function_exists('bg_forreaders_proc'))
-		$content = preg_replace ('/<!--nextpage-->/is', '<!--nextpage-->'.'[noread]'.$table_of_contents.'[/noread]', $content);	
-	else
-		$content = preg_replace ('/<!--nextpage-->/is', '<!--nextpage-->'.$table_of_contents, $content);	
-		
+	// Оглавление на каждой странице, кроме первой
+	if ($toc_place) {
+		if (function_exists('bg_forreaders_proc'))
+			$content = preg_replace ('/<!--nextpage-->/is', '<!--nextpage-->'.'[noread]'.$table_of_contents.'[/noread]', $content);	
+		else
+			$content = preg_replace ('/<!--nextpage-->/is', '<!--nextpage-->'.$table_of_contents, $content);	
+	}
+	
+	// Оглавление на первой странице
 	$content = 	preg_replace ('/href="\.\.\//is', 'href="', $table_of_contents).$content;
 		
 	return $content;

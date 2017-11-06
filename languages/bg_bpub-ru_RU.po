@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Bg Book Publisher\n"
-"POT-Creation-Date: 2017-10-31 20:02+0300\n"
-"PO-Revision-Date: 2017-10-31 20:02+0300\n"
+"POT-Creation-Date: 2017-11-04 05:42+0300\n"
+"PO-Revision-Date: 2017-11-04 05:43+0300\n"
 "Last-Translator: Vadim Bogaiskov <vadim.bogaiskov@gmail.com>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -21,27 +21,27 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: bg_bpub.php:224
+#: bg_bpub.php:242
 msgid "Table of contents"
 msgstr "Оглавление"
 
-#: bg_bpub.php:261 inc/options.php:10
+#: bg_bpub.php:283 inc/options.php:10
 msgid "Book Publisher"
 msgstr "Публикация книг"
 
-#: bg_bpub.php:276
+#: bg_bpub.php:298
 msgid "this post is book"
 msgstr "этот пост - книга"
 
-#: bg_bpub.php:278 inc/options.php:45
+#: bg_bpub.php:300 inc/options.php:45
 msgid "Header level for page break tags"
 msgstr "Уровень заголовков для тегов разрыва страницы"
 
-#: bg_bpub.php:282 inc/options.php:46
+#: bg_bpub.php:304 inc/options.php:46
 msgid "Header level for table of contents"
 msgstr "Уровень заголовков для оглавления"
 
-#: bg_bpub.php:286
+#: bg_bpub.php:308
 msgid "Book author"
 msgstr "Автор книги"
 
@@ -58,22 +58,26 @@ msgid "A post is book or not by default?"
 msgstr "Пост - книга или нет по умолчанию?"
 
 #: inc/options.php:47
+msgid "Table of contents on each page"
+msgstr "Оглавление  на каждой странице"
+
+#: inc/options.php:48
 msgid "Place where show name of book author"
 msgstr "Место где показывать имя автора книги"
 
-#: inc/options.php:55
+#: inc/options.php:56
 msgid "check if a post is book by default"
 msgstr "отметьте, если пост является книгой по умолчанию"
 
-#: inc/options.php:82
+#: inc/options.php:92
 msgid "Before title"
 msgstr "До заголовка"
 
-#: inc/options.php:83
+#: inc/options.php:93
 msgid "After title"
 msgstr "После заголовка"
 
-#: inc/options.php:84
+#: inc/options.php:94
 msgid "Don't show name of book author"
 msgstr "Не показывать имя автора книги"
 

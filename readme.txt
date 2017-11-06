@@ -29,27 +29,23 @@ To customize the post appearance, you can use the following classes:
 
 == Installation ==
 
-1. Upload 'bg-biblie-references' directory to the '/wp-content/plugins/' directory.
+1. Upload 'bg-book-publisher' directory to the '/wp-content/plugins/' directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Screenshots ==
 
 1. Plugin's post settings.
-2. Plugin options.
+2. Plugin's options.
 
 == Changelog ==
 
-= 0.2 =
+= 1.0 =
 
-* Added options page
-
-= 0.1 =
-
-* Plugin in beta testing mode
+* Plugin in start edition
 
 == Upgrade Notice ==
 
-* Added options page
+* Start edition
 
 == Notes for Translators ==
 

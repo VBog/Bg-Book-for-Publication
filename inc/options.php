@@ -3,7 +3,7 @@
 	Страница настроек плагина
 	
 *******************************************************************************************/
-add_option('bg_bpub_options', array('default'=>'', 'nextpage_level'=>'2', 'toc_level'=>'3', 'author_place'=>'after'));
+add_option('bg_bpub_options', array('default'=>'', 'nextpage_level'=>'2', 'toc_level'=>'3', 'toc_place'=>'', 'author_place'=>'after'));
 
 add_action('admin_menu', 'bg_bpub_add_plugin_page');
 function bg_bpub_add_plugin_page(){
@@ -44,6 +44,7 @@ function bg_bpub_settings(){
 	add_settings_field('bg_bpub_default', __('A post is book or not by default?', 'bg_bpub'), 'fill_bg_bpub_default', 'bg_bpub_page', 'section_1' );
 	add_settings_field('bg_bpub_nextpage_level', __('Header level for page break tags', 'bg_bpub'), 'fill_bg_bpub_nextpage_level', 'bg_bpub_page', 'section_1' );
 	add_settings_field('bg_bpub_toc_level', __('Header level for table of contents', 'bg_bpub'), 'fill_bg_bpub_toc_level', 'bg_bpub_page', 'section_1' );
+	add_settings_field('bg_bpub_toc_place', __('Table of contents on each page', 'bg_bpub'), 'fill_bg_bpub_toc_place', 'bg_bpub_page', 'section_1' );
 	add_settings_field('bg_bpub_author_place', __('Place where show name of book author', 'bg_bpub'), 'fill_bg_bpub_author_place', 'bg_bpub_page', 'section_1' );
 }
 
@@ -74,6 +75,15 @@ function fill_bg_bpub_toc_level(){
 }
 
 ## Заполняем опцию 4
+function fill_bg_bpub_toc_place(){
+	$val = get_option('bg_bpub_options');
+	$val = isset ($val['toc_place'])?$val['toc_place']:""; 
+	?>
+	<label><input type="checkbox" name="bg_bpub_options[toc_place]" value="1" <?php checked( 1, $val ); ?> /></label>
+	<?php
+}
+
+## Заполняем опцию 5
 function fill_bg_bpub_author_place(){
 	$val = get_option('bg_bpub_options');
 	$val = $val['author_place']; 
@@ -107,6 +117,11 @@ function bg_bpub_sanitize_callback( $options ){
 			if ($val > 6) $val = 6;
 		}
 
+		if( $name == 'toc_place' ) {
+			$val = (int) sanitize_text_field( $val );
+			if ($val != 1) $val = "";
+		}
+		
 		if( $name == 'author_place' ) {
 			$val = sanitize_key( $val );
 		}
