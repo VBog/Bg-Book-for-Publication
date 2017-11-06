@@ -39,13 +39,17 @@ To customize the post appearance, you can use the following classes:
 
 == Changelog ==
 
+= 1.0.1 =
+
+* Fixed some bugs.
+
 = 1.0 =
 
 * Plugin in start edition
 
 == Upgrade Notice ==
 
-* Start edition
+* Fixed some bugs.
 
 == Notes for Translators ==
 

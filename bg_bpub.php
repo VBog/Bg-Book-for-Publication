@@ -2,7 +2,7 @@
 /* 
     Plugin Name: Bg Book Publisher 
     Description: The plugin helps you to publish big book with a detailed structure of chapters and sections and forms table of contents of the book.
-    Version: 1.0
+    Version: 1.0.1
     Author: VBog
     Author URI: https://bogaiskov.ru 
 	License:     GPL2
@@ -37,7 +37,7 @@ if ( !defined('ABSPATH') ) {
 	die( 'Sorry, you are not allowed to access this page directly.' ); 
 }
 
-define('BG_BPUB_VERSION', '1.0');
+define('BG_BPUB_VERSION', '1.0.1');
 
 // Устанавливаем крючки
 if ( defined('ABSPATH') && defined('WPINC') ) {
@@ -59,7 +59,7 @@ if ( defined('ABSPATH') && defined('WPINC') ) {
 	// Регистрируем крючок для добавления таблицы стилей для плагина
 		add_action( 'wp_enqueue_scripts' , 'bg_bpub_frontend_styles' );
 	// Регистрируем фильтр для добавления имени автора книги в заголовок записи
-		add_filter( 'the_title', 'add_author_to_page_title' );
+		add_filter( 'the_title', 'add_author_to_page_title', 100, 2 );
 	}
 
 // Регистрируем шорт-код book_author
@@ -87,19 +87,23 @@ function bg_bpub_frontend_styles () {
 }
 
 // Добавляем имя автора книги в заголовок записи
-function add_author_to_page_title( $title ) {
-	global $author_place;
+function add_author_to_page_title( $title, $id ) {
+	global $post, $author_place;
 	if ($author_place == 'none') return $title;
-	$post = get_post();
-	if( isset($post) && ($post->post_type == 'post' || $post->post_type == 'page') ) { 	// убедимся что мы редактируем заголовок нужного типа поста
-		if ($author_place == 'after') $title = $title.'<br>'.bg_bpub_book_author($post->ID);
-		else if ($author_place == 'before') $title = bg_bpub_book_author($post->ID).'<br>'.$title;
+	$book_author = bg_bpub_book_author($id);
+	if (!$book_author) return $title;
+	// убедимся что мы редактируем заголовок нужного типа поста
+	if ( is_singular( array ('post', 'page') ) && in_the_loop() ) {
+		if ($author_place == 'after') $title = $title.'<br>'.$book_author;
+		else if ($author_place == 'before') $title = $book_author.'<br>'.$title;
 	}
 	return $title;
 }
 // Имя автора книги
 function bg_bpub_book_author($post_id) {
-	return '<span class="bg_bpub_book_author">'.get_post_meta($post_id, 'book_author',true).'</span>';
+	
+	$book_author = get_post_meta($post_id, 'book_author',true);
+	return ((!$book_author)? "" : '<span class=bg_bpub_book_author>'.$book_author.'</span>');
 }
 
 // [book_author]
@@ -238,20 +242,21 @@ function bg_bpub_proc ($content) {
 			return $nextpage.'<'.$match[1].$match[2].'>'.$anchor.$match[3].'</'.$match[1].'>';
 		} ,$content);
 		
-	
-	$table_of_contents = '<div class="bg_bpub_toc"><details><summary><b>'.__('Table of contents', 'bg_bpub').'</b></summary><br>'.$table_of_contents.'</details></div>';
-	
-	// Оглавление на каждой странице, кроме первой
-	if ($toc_place) {
-		if (function_exists('bg_forreaders_proc'))
-			$content = preg_replace ('/<!--nextpage-->/is', '<!--nextpage-->'.'[noread]'.$table_of_contents.'[/noread]', $content);	
-		else
-			$content = preg_replace ('/<!--nextpage-->/is', '<!--nextpage-->'.$table_of_contents, $content);	
-	}
-	
-	// Оглавление на первой странице
-	$content = 	preg_replace ('/href="\.\.\//is', 'href="', $table_of_contents).$content;
+	if ($table_of_contents) {
+		/* translators: Summary in spoiler on a page */
+		$table_of_contents = '<div class="bg_bpub_toc"><details><summary><b>'.__('Table of contents', 'bg_bpub').'</b></summary><br>'.$table_of_contents.'</details></div>';
+
+		// Оглавление на каждой странице, кроме первой
+		if ($toc_place) {
+			if (function_exists('bg_forreaders_proc'))
+				$content = preg_replace ('/<!--nextpage-->/is', '<!--nextpage-->'.'[noread]'.$table_of_contents.'[/noread]', $content);	
+			else
+				$content = preg_replace ('/<!--nextpage-->/is', '<!--nextpage-->'.$table_of_contents, $content);	
+		}
 		
+		// Оглавление на первой странице
+		$content = 	preg_replace ('/href="\.\.\//is', 'href="', $table_of_contents).$content;
+	}
 	return $content;
 }
 
@@ -280,6 +285,7 @@ function bg_bpub_clear ($content) {
 add_action('admin_init', 'bg_bpub_extra_fields', 1);
 // Создание блока
 function bg_bpub_extra_fields() {
+	/* translators: Meta box title */
     add_meta_box( 'bg_bpub_extra_fields', __('Book Publisher', 'bg_bpub'), 'bg_bpub_extra_fields_box_func', array('post', 'page'), 'side', 'low'  );
 }
 // Добавление полей
@@ -295,16 +301,20 @@ function bg_bpub_extra_fields_box_func( $post ){
 	
 	$html = '<label><input type="checkbox" name="bg_bpub_the_book" id="bg_bpub_the_book"';
 	$html .= (get_post_meta($post->ID, 'the_book',true)) ? ' checked="checked"' : '';
+	/* translators: Сheckbox label (in Metabox)*/
 	$html .= ' /> '.__('this post is book', 'bg_bpub').'</label><br>';
 
+	/* translators: Label for input field  (in Metabox) */
 	$html .= '<label>'.__('Header level for page break tags', 'bg_bpub').'<br>';
 	$html .= '<input type="number" name="bg_bpub_nextpage_level" id="bg_bpub_nextpage_level" min="1" max="6"';
 	$html .= ' value="'.get_post_meta($post->ID, 'nextpage_level',true).'" /></label><br>';
 
+	/* translators: Label for input field  (in Metabox) */
 	$html .= '<label>'.__('Header level for table of contents', 'bg_bpub').'<br>';
 	$html .= '<input type="number" name="bg_bpub_toc_level" id="bg_bpub_toc_level" min="1" max="6"';
 	$html .= ' value="'.get_post_meta($post->ID, 'toc_level',true).'" /></label><br>';
 
+	/* translators: Label for input field  (in Metabox) */
 	$html .= '<label>'.__('Book author', 'bg_bpub').'<br>';
 	$html .= '<input type="text" name="bg_bpub_book_author" id="bg_bpub_book_author" size="35"';
 	$html .= ' value="'.get_post_meta($post->ID, 'book_author',true).'" /></label><br>';

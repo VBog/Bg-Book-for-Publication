@@ -7,6 +7,7 @@ add_option('bg_bpub_options', array('default'=>'', 'nextpage_level'=>'2', 'toc_l
 
 add_action('admin_menu', 'bg_bpub_add_plugin_page');
 function bg_bpub_add_plugin_page(){
+	/* translators: Option page title */
 	add_options_page( __('Book Publisher options', 'bg_bpub') , __('Book Publisher', 'bg_bpub'), 'manage_options', 'bg_bpub_slug', 'bg_bpub_options_page_output' );
 }
 
@@ -38,13 +39,19 @@ function bg_bpub_settings(){
 	register_setting( 'bg_bpub_option_group', 'bg_bpub_options', 'bg_bpub_sanitize_callback' );
 
 	// параметры: $id, $title, $callback, $page
+	/* translators: Section title */
 	add_settings_section( 'section_1', __('Default options', 'bg_bpub'), '', 'bg_bpub_page' ); 
 
 	// параметры: $id, $title, $callback, $page, $section, $args
+	/* translators: Settings field #1 */
 	add_settings_field('bg_bpub_default', __('A post is book or not by default?', 'bg_bpub'), 'fill_bg_bpub_default', 'bg_bpub_page', 'section_1' );
+	/* translators: Settings field #2 */
 	add_settings_field('bg_bpub_nextpage_level', __('Header level for page break tags', 'bg_bpub'), 'fill_bg_bpub_nextpage_level', 'bg_bpub_page', 'section_1' );
+	/* translators: Settings field #3 */
 	add_settings_field('bg_bpub_toc_level', __('Header level for table of contents', 'bg_bpub'), 'fill_bg_bpub_toc_level', 'bg_bpub_page', 'section_1' );
+	/* translators: Settings field #4 */
 	add_settings_field('bg_bpub_toc_place', __('Table of contents on each page', 'bg_bpub'), 'fill_bg_bpub_toc_place', 'bg_bpub_page', 'section_1' );
+	/* translators: Settings field #5 */
 	add_settings_field('bg_bpub_author_place', __('Place where show name of book author', 'bg_bpub'), 'fill_bg_bpub_author_place', 'bg_bpub_page', 'section_1' );
 }
 
@@ -52,8 +59,9 @@ function bg_bpub_settings(){
 function fill_bg_bpub_default(){
 	$val = get_option('bg_bpub_options');
 	$val = isset ($val['default'])?$val['default']:""; 
+	
 	?>
-	<label><input type="checkbox" name="bg_bpub_options[default]" value="1" <?php checked( 1, $val ); ?> /> <?php _e('check if a post is book by default', 'bg_bpub'); ?></label>
+	<label><input type="checkbox" name="bg_bpub_options[default]" value="1" <?php checked( 1, $val ); ?> /> <?php /* translators: Comment to settings field #1 */ _e('check if a post is book by default', 'bg_bpub'); ?></label>
 	<?php
 }
 ## Заполняем опцию 2
@@ -89,9 +97,9 @@ function fill_bg_bpub_author_place(){
 	$val = $val['author_place']; 
 	?>
    <select name="bg_bpub_options[author_place]">
-		<option value="before" <?php selected( 'before', $val ); ?> ><?php _e('Before title', 'bg_bpub'); ?></option>
-		<option value="after" <?php selected( 'after', $val ); ?> ><?php _e('After title', 'bg_bpub'); ?></option>
-		<option value="none" <?php selected( 'none', $val ); ?> ><?php _e('Don\'t show name of book author', 'bg_bpub'); ?></option>
+		<option value="before" <?php selected( 'before', $val ); ?> ><?php /* translators: Option value of Settings field #1 */ _e('Before title', 'bg_bpub'); ?></option>
+		<option value="after" <?php selected( 'after', $val ); ?> ><?php /* translators: Option value of Settings field #1 */ _e('After title', 'bg_bpub'); ?></option>
+		<option value="none" <?php selected( 'none', $val ); ?> ><?php /* translators: Option value of Settings field #1 */ _e('Don\'t show name of book author', 'bg_bpub'); ?></option>
    </select>
 	<?php
 }
